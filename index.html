@@ -146,9 +146,10 @@
     </div>
   </div>
 
-  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://flare-chat-e89g.onrender.com/socket.io/socket.io.js"></script>
   <script>
-    var socket = io();
+    // ПОДКЛЮЧАЕМСЯ К ОБЛАЧНОМУ СЕРВЕРУ RENDER
+    var socket = io("https://flare-chat-e89g.onrender.com");
     var username = "";
     var currentChat = ""; 
 
