@@ -11,9 +11,7 @@ const users = {};
 const onlineUsers = new Set(); 
 let messages = []; 
 
-// ==========================================
 // КЛЮЧ БЕРЕТСЯ ИЗ НАСТРОЕК RENDER (ENVIRONMENT VARIABLES)
-// ==========================================
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 
 // ТВОЙ СЕКРЕТНЫЙ ПРОТОКОЛ FLARE-AI
@@ -114,9 +112,10 @@ async function askAI(prompt, socket, fromUser) {
     const response = await axios.post(
       'https://openrouter.ai/api/v1/chat/completions',
       {
-        model: "meta-llama/llama-3-8b-instruct", // Бесплатная модель
+        // ОБНОВЛЕННАЯ МОДЕЛЬ (КАК СОВЕТОВАЛ RENDER)
+        model: "meta-llama/llama-3.1-8b-instruct", 
         messages: [
-          { role: "system", content: SYSTEM_PROMPT }, // Твой протокол
+          { role: "system", content: SYSTEM_PROMPT },
           { role: "user", content: prompt }
         ]
       },
@@ -159,5 +158,5 @@ async function askAI(prompt, socket, fromUser) {
 }
 
 server.listen(3000, () => {
-  console.log('FLARErayt сервер с OpenRouter запущен на порту 3000');
+  console.log('FLARErayt сервер с ИИ запущен на порту 3000');
 });
