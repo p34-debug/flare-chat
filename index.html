@@ -148,7 +148,6 @@
 
   <script src="https://flare-chat-e89g.onrender.com/socket.io/socket.io.js"></script>
   <script>
-    // ПОДКЛЮЧАЕМСЯ К ОБЛАЧНОМУ СЕРВЕРУ RENDER
     var socket = io("https://flare-chat-e89g.onrender.com");
     var username = "";
     var currentChat = ""; 
@@ -184,10 +183,23 @@
       setTimeout(() => { splashScreen.style.display = 'none'; loginScreen.style.display = 'flex'; }, 500);
     });
 
+    // ФИКС @NULL: Автоматическое переподключение
+    socket.on('connect', () => {
+      const savedUser = localStorage.getItem('flare-user');
+      const savedPass = localStorage.getItem('flare-pass');
+      if (savedUser && savedPass) {
+        socket.emit('login', { username: savedUser, password: savedPass });
+      }
+    });
+
     loginBtn.addEventListener('click', () => {
       var u = usernameInput.value.trim().replace('@', '');
       var p = passwordInput.value;
       if (!u || !p) { errorDiv.innerText = "Заполни поля!"; return; }
+      
+      localStorage.setItem('flare-user', u);
+      localStorage.setItem('flare-pass', p);
+      
       socket.emit('login', { username: u, password: p });
     });
 
@@ -198,7 +210,11 @@
       filterChatList();
     });
 
-    socket.on('login error', (msg) => { errorDiv.innerText = msg; });
+    socket.on('login error', (msg) => { 
+      errorDiv.innerText = msg; 
+      localStorage.removeItem('flare-user');
+      localStorage.removeItem('flare-pass');
+    });
 
     let allUsers = [];
     socket.on('online users', (users) => {
