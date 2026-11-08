@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flare-Ai | FLARErayt</title>
+    <link rel="stylesheet" href="пруф.css">
+</head>
+<body>
+    <!-- Экран чата -->
+    <div id="chat-container">
+        <div id="header">
+            <div class="logo-area">
+                <span class="logo">FLARErayt</span> Flare-Ai
+            </div>
+            <button id="settings-btn">⚙️</button>
+        </div>
+        
+        <div id="messages">
+            <div class="message ai">Привет! Я Flare-Ai. Чем могу помочь?</div>
+        </div>
+
+        <div id="input-area">
+            <input type="text" id="user-input" placeholder="Спроси что-нибудь..." autocomplete="off">
+            <button id="send-btn">➤</button>
+        </div>
+    </div>
+
+    <!-- Экран настроек (скрыт по умолчанию) -->
+    <div id="settings-panel" class="hidden">
+        <h2>Настройки</h2>
+        <button id="close-settings">← Назад</button>
+        <div class="setting-item">
+            <label>Имя пользователя:</label>
+            <input type="text" id="username-setting" placeholder="Твое имя">
+        </div>
+        <button id="clear-chat-btn" class="danger">Очистить историю чата</button>
+    </div>
+
+    <script src="пруф.js"></script>
+</body>
+</html>
