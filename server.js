@@ -40,13 +40,20 @@ const MessageSchema = new mongoose.Schema({
 });
 const Message = mongoose.model('Message', MessageSchema);
 
-// Раздача HTML для мессенджера (если зайдешь по прямой ссылке)
+// ==========================================
+// РАЗДАЧА HTML (МЕССЕНДЖЕР)
+// ==========================================
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
 // ==========================================
-// API ДЛЯ ПРИЛОЖЕНИЯ FLARE-AI (Code Studio)
+// РАЗДАЧА FLARE-AI (ПАПКА /ai)
+// ==========================================
+app.use('/ai', express.static('ai'));
+
+// ==========================================
+// API ДЛЯ ПРИЛОЖЕНИЯ FLARE-AI
 // ==========================================
 app.post('/api/ai', async (req, res) => {
   const userPrompt = req.body.prompt;
