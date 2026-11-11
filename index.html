@@ -5,90 +5,72 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     :root {
-      --bg-main: #0f0f11;
-      --bg-panel: #1a1a1f;
-      --bg-msg-mine: #2b5278;
-      --bg-msg-other: #212121;
-      --accent: #ff5722;
-      --text: #ffffff;
-      --text-muted: #8e8e93;
-      --border: #2c2c2e;
+      --bg-main: #0f0f11; --bg-panel: #1a1a1f; --bg-msg-mine: #2b5278; --bg-msg-other: #212121;
+      --accent: #ff5722; --text: #ffffff; --text-muted: #8e8e93; --border: #2c2c2e;
     }
-
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg-main); color: var(--text); margin: 0; padding: 0; display: flex; height: 100vh; overflow: hidden; }
+    body { font-family: -apple-system, sans-serif; background: var(--bg-main); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
 
-    /* Экран загрузки */
-    #splash-screen { position: fixed; inset: 0; background: var(--bg-main); z-index: 1000; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.4s; }
-    #splash-screen h1 { color: var(--text); font-size: 2.5em; margin: 0; letter-spacing: 1px; }
+    /* Экраны */
+    #splash-screen { position: fixed; inset: 0; background: var(--bg-main); z-index: 1000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+    #splash-screen h1 { color: var(--text); font-size: 2.5em; margin: 0; }
     #splash-screen p { color: var(--text-muted); margin-top: 5px; }
     #lets-go-btn { margin-top: 30px; background: var(--accent); color: #fff; border: none; padding: 14px 50px; border-radius: 25px; font-size: 1.1em; font-weight: 600; cursor: pointer; }
 
-    /* Вход */
     #login-screen { position: fixed; inset: 0; background: var(--bg-main); z-index: 900; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
-    .login-box { background: var(--bg-panel); padding: 30px; border-radius: 20px; width: 100%; max-width: 350px; display: flex; flex-direction: column; gap: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-    .login-box h2 { text-align: center; margin-top: 0; font-weight: 500; }
+    .login-box { background: var(--bg-panel); padding: 30px; border-radius: 20px; width: 100%; max-width: 350px; display: flex; flex-direction: column; gap: 15px; }
+    .login-box h2 { text-align: center; margin: 0 0 10px 0; font-weight: 500; }
     input { padding: 15px; border-radius: 12px; border: 1px solid var(--border); background: #0f0f11; color: var(--text); font-size: 16px; outline: none; }
     input:focus { border-color: var(--accent); }
     .login-btn { background: var(--accent); color: #fff; border: none; padding: 15px; border-radius: 12px; font-weight: 600; font-size: 16px; cursor: pointer; }
 
-    /* Основной экран */
+    /* Главный */
     #main-screen { display: none; width: 100%; height: 100%; position: relative; flex-direction: row; }
     #nav-sidebar { width: 60px; background: var(--bg-panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding: 20px 0; gap: 20px; z-index: 10; }
-    .nav-icon { font-size: 1.4em; cursor: pointer; opacity: 0.6; padding: 10px; transition: 0.2s; }
-    .nav-icon:hover, .nav-icon.active { opacity: 1; color: var(--accent); }
+    .nav-icon { font-size: 1.4em; cursor: pointer; opacity: 0.6; padding: 10px; }
+    .nav-icon.active { opacity: 1; color: var(--accent); }
     
-    /* Список чатов */
     #chat-list-area { width: 100%; max-width: 350px; background: var(--bg-main); display: flex; flex-direction: column; border-right: 1px solid var(--border); position: relative; }
-    #search-bar { padding: 15px; border-bottom: 1px solid var(--border); }
-    #search-input { width: 100%; padding: 12px 15px; border-radius: 10px; background: var(--bg-panel); border: none; color: var(--text); font-size: 15px; }
-    
+    #search-bar { padding: 15px; border-bottom: 1px solid var(--border); cursor: pointer; }
+    #search-placeholder { width: 100%; padding: 12px 15px; border-radius: 10px; background: var(--bg-panel); color: var(--text-muted); font-size: 15px; display: flex; align-items: center; }
+    #search-placeholder::before { content: '?'; margin-right: 10px; }
+
     #chat-list { list-style: none; padding: 0; margin: 0; overflow-y: auto; flex: 1; padding-bottom: 80px; }
-    .chat-item { display: flex; align-items: center; padding: 12px 15px; cursor: pointer; transition: background 0.1s; }
+    .chat-item { display: flex; align-items: center; padding: 12px 15px; cursor: pointer; }
     .chat-item:hover { background: rgba(255,255,255,0.03); }
     .avatar { width: 50px; height: 50px; background: var(--accent); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: 600; font-size: 1.2em; margin-right: 15px; color: #fff; }
     .channel-avatar { background: #0088cc; }
-    .chat-info { flex: 1; border-bottom: 1px solid var(--border); padding-bottom: 12px; display: flex; flex-direction: column; justify-content: center; height: 100%; margin-top: -12px; padding-top: 12px;}
-    .chat-item:last-child .chat-info { border-bottom: none; }
+    .chat-info { flex: 1; border-bottom: 1px solid var(--border); padding-bottom: 12px; height: 100%; margin-top: -12px; padding-top: 12px;}
     .chat-name { font-size: 16px; font-weight: 500; }
 
-    /* Кнопка создания (✏️) */
+    /* Кнопки создания (Группа и Настройки) */
     #create-btn { position: absolute; bottom: 20px; right: 20px; width: 55px; height: 55px; background: var(--accent); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.4em; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.5); z-index: 20; color: white;}
-    #create-btn:active { transform: scale(0.92); }
 
-    /* Окно чата */
+    /* Чат */
     #chat-area { flex: 1; display: none; flex-direction: column; background: var(--bg-main); }
     #chat-header { background: var(--bg-panel); padding: 12px 15px; display: flex; align-items: center; border-bottom: 1px solid var(--border); }
-    #back-btn { font-size: 1.4em; margin-right: 15px; cursor: pointer; color: var(--text); opacity: 0.8; }
+    #back-btn { font-size: 1.4em; margin-right: 15px; cursor: pointer; opacity: 0.8; }
     #chat-title { font-weight: 600; font-size: 1.1em; }
     
     #messages { list-style: none; margin: 0; padding: 15px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 8px; }
-    .message { padding: 10px 14px; border-radius: 18px; max-width: 85%; font-size: 15px; line-height: 1.4; position: relative; word-wrap: break-word; }
+    .message { padding: 10px 14px; border-radius: 18px; max-width: 85%; font-size: 15px; line-height: 1.4; word-wrap: break-word; }
     .message.my-msg { align-self: flex-end; background: var(--bg-msg-mine); border-bottom-right-radius: 4px; }
     .message:not(.my-msg) { align-self: flex-start; background: var(--bg-msg-other); border-bottom-left-radius: 4px; }
+    .message img { max-width: 100%; border-radius: 10px; margin-top: 5px; display: block; }
+    .meta { font-size: 0.75em; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: flex; justify-content: space-between; gap: 15px; }
     
-    .meta { font-size: 0.75em; color: rgba(255,255,255,0.5); margin-bottom: 4px; display: flex; justify-content: space-between; gap: 15px; align-items: flex-end; }
-    
-    /* Ввод сообщения */
-    #form { display: flex; padding: 10px 15px; background: var(--bg-panel); align-items: center; border-top: 1px solid var(--border); }
-    #message-input { flex: 1; padding: 14px 20px; border-radius: 22px; border: none; background: var(--bg-main); color: white; font-size: 16px; outline: none; margin-right: 10px; }
-    .send-btn { background: var(--accent); color: white; border: none; width: 48px; height: 48px; border-radius: 50%; font-size: 1.2em; cursor: pointer; display: flex; justify-content: center; align-items: center; }
-    #casino-btn { background: #ffd700; color: #000; border: none; width: 48px; height: 48px; border-radius: 50%; font-weight: bold; cursor: pointer; margin-right: 10px; display: none; font-size: 15px; }
+    #form { display: flex; padding: 10px 15px; background: var(--bg-panel); align-items: center; border-top: 1px solid var(--border); gap: 10px; }
+    #message-input { flex: 1; padding: 14px 20px; border-radius: 22px; border: none; background: var(--bg-main); color: white; font-size: 16px; outline: none; }
+    .action-btn { background: transparent; color: var(--accent); border: none; font-size: 1.5em; cursor: pointer; }
+    .send-btn { background: var(--accent); color: white; border: none; width: 48px; height: 48px; border-radius: 50%; font-size: 1.2em; cursor: pointer; }
 
-    /* Экраны профиля и настроек */
-    .screen-overlay { display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg-main); z-index: 50; flex-direction: column; }
+    /* Экраны поверх (Настройки, Поиск, Группы) */
+    .screen-overlay { display: none; position: absolute; inset: 0; background: var(--bg-main); z-index: 50; flex-direction: column; }
     .header-overlay { padding: 15px; background: var(--bg-panel); border-bottom: 1px solid var(--border); display: flex; align-items: center; }
     .back-overlay-btn { background: transparent; color: var(--text); border: none; font-size: 1.4em; cursor: pointer; margin-right: 15px; }
-    .header-overlay h2 { margin: 0; font-size: 1.1em; font-weight: 600; }
     
-    .profile-box { background: var(--bg-panel); margin: 20px; padding: 30px 20px; border-radius: 15px; text-align: center; }
-    .profile-avatar { width: 90px; height: 90px; border-radius: 50%; margin: 0 auto 15px auto; display: flex; justify-content: center; align-items: center; font-size: 2.5em; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-    .color-picker { display: flex; justify-content: center; gap: 12px; margin-top: 25px; }
-    .color-circle { width: 35px; height: 35px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
-    .color-circle:active { transform: scale(1.1); }
-    
-    .settings-item { padding: 15px 20px; border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-    .settings-item:last-child { border-bottom: none; }
+    .settings-item { padding: 15px 20px; border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; }
+    #search-screen-input { width: 100%; padding: 10px 15px; border-radius: 10px; background: var(--bg-main); border: 1px solid var(--border); color: white; outline: none; }
   </style>
 </head>
 <body>
@@ -101,7 +83,7 @@
 
   <div id="login-screen">
     <div class="login-box">
-      <h2>Вход в Flare•chat</h2>
+      <h2>Вход</h2>
       <input type="text" id="username-input" placeholder="Имя пользователя" maxlength="15">
       <input type="password" id="password-input" placeholder="Пароль">
       <button class="login-btn" id="login-btn">ВОЙТИ</button>
@@ -110,292 +92,154 @@
   </div>
 
   <div id="main-screen">
-    <!-- Меню слева -->
     <div id="nav-sidebar">
       <div class="nav-icon active" id="nav-home">💬</div>
       <div class="nav-icon" id="nav-settings">⚙️</div>
       <div class="nav-icon" id="nav-profile">👤</div>
     </div>
 
-    <!-- Список чатов -->
     <div id="chat-list-area">
-      <div id="search-bar">
-        <input type="text" id="search-input" placeholder="Поиск...">
-      </div>
+      <div id="search-bar"><div id="search-placeholder">Найти друзей...</div></div>
       <ul id="chat-list"></ul>
-      <div id="create-btn">✏️</div>
+      <div id="create-btn" title="Создать группу">✏️</div>
     </div>
 
-    <!-- Окно чата -->
     <div id="chat-area">
-      <div id="chat-header">
-        <div id="back-btn">←</div>
-        <div id="chat-title">Чат</div>
-      </div>
+      <div id="chat-header"><div id="back-btn">←</div><div id="chat-title">Чат</div></div>
       <ul id="messages"></ul>
       <form id="form">
+        <input type="file" id="file-input" accept="image/*" style="display: none;">
+        <button type="button" class="action-btn" id="attach-btn">📎</button>
         <input id="message-input" autocomplete="off" placeholder="Сообщение..." />
-        <button type="button" id="casino-btn">777</button>
         <button type="submit" class="send-btn">➤</button>
       </form>
     </div>
 
-    <!-- Экран профиля -->
-    <div id="profile-screen" class="screen-overlay">
-      <div class="header-overlay">
-        <button class="back-overlay-btn" id="close-profile">←</button>
-        <h2>Профиль</h2>
-      </div>
-      <div class="profile-box">
-        <div class="profile-avatar" id="profile-avatar" style="background: var(--accent);">U</div>
-        <h3 id="profile-username" style="margin: 0;">@user</h3>
-        <p style="color: var(--text-muted); font-size: 0.9em; margin-top: 5px;">Выберите цвет:</p>
-        <div class="color-picker">
-          <div class="color-circle" style="background: #ff5722;" data-color="#ff5722"></div>
-          <div class="color-circle" style="background: #0088cc;" data-color="#0088cc"></div>
-          <div class="color-circle" style="background: #4caf50;" data-color="#4caf50"></div>
-          <div class="color-circle" style="background: #9c27b0;" data-color="#9c27b0"></div>
-          <div class="color-circle" style="background: #ffeb3b;" data-color="#ffeb3b"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Экран настроек -->
+    <!-- ЭКРАН НАСТРОЕК -->
     <div id="settings-screen" class="screen-overlay">
-      <div class="header-overlay">
-        <button class="back-overlay-btn" id="close-settings">←</button>
-        <h2>Настройки</h2>
-      </div>
+      <div class="header-overlay"><button class="back-overlay-btn" id="close-settings">←</button><h2>Настройки</h2></div>
       <div style="background: var(--bg-panel); margin-top: 20px;">
-        <div class="settings-item">Темы оформления <span style="color:var(--text-muted)">></span></div>
-        <div class="settings-item">Уведомления <span style="color:var(--text-muted)">></span></div>
-        <div class="settings-item">Конфиденциальность <span style="color:var(--text-muted)">></span></div>
+        <div class="settings-item">Тема: FLARErayt (Неон) <span>></span></div>
+        <div class="settings-item">Фильтр мата <span style="color:var(--accent);">ВЫКЛ</span></div>
+        <div class="settings-item">Уведомления <span>></span></div>
       </div>
     </div>
 
+    <!-- ЭКРАН ПОИСКА -->
+    <div id="search-screen" class="screen-overlay">
+      <div class="header-overlay"><button class="back-overlay-btn" id="close-search">←</button><h2>Поиск людей</h2></div>
+      <div style="padding: 15px;"><input type="text" id="search-screen-input" placeholder="Введите имя..."></div>
+      <ul id="search-results" style="list-style:none; padding:0;"></ul>
+    </div>
   </div>
 
   <script src="https://flare-chat-e89g.onrender.com/socket.io/socket.io.js"></script>
   <script>
     var socket = io("https://flare-chat-e89g.onrender.com");
     var username = "";
-    var currentChat = ""; 
+    var currentChat = "global"; 
 
-    const splashScreen = document.getElementById('splash-screen');
-    const loginScreen = document.getElementById('login-screen');
-    const mainScreen = document.getElementById('main-screen');
-    const loginBtn = document.getElementById('login-btn');
-    const usernameInput = document.getElementById('username-input');
-    const passwordInput = document.getElementById('password-input');
-    const errorDiv = document.getElementById('login-error');
-    const chatList = document.getElementById('chat-list');
-    const searchInput = document.getElementById('search-input');
-    const chatArea = document.getElementById('chat-area');
-    const chatListArea = document.getElementById('chat-list-area');
-    const chatTitle = document.getElementById('chat-title');
-    const messagesList = document.getElementById('messages');
-    const form = document.getElementById('form');
-    const messageInput = document.getElementById('message-input');
-    const backBtn = document.getElementById('back-btn');
-    const casinoBtn = document.getElementById('casino-btn');
-    const navSidebar = document.getElementById('nav-sidebar');
-    const profileScreen = document.getElementById('profile-screen');
-    const settingsScreen = document.getElementById('settings-screen');
+    // Элементы
+    const splash = document.getElementById('splash-screen'), loginScreen = document.getElementById('login-screen'), mainScreen = document.getElementById('main-screen');
+    const chatList = document.getElementById('chat-list'), messagesList = document.getElementById('messages');
+    const chatArea = document.getElementById('chat-area'), chatListArea = document.getElementById('chat-list-area');
+    const settingsScreen = document.getElementById('settings-screen'), searchScreen = document.getElementById('search-screen');
 
-    // ОБНОВЛЕННЫЕ НОВОСТИ (ДОБАВИЛ ВСЕ ТВОИ УЛУЧШЕНИЯ)
     const channelMessages = [
-      { user: "FlareChatNEW", text: "Добро пожаловать в официальный канал Flare•chat!", time: "12:00" },
-      { user: "FlareChatNEW", text: "Мы подключили MongoDB. Теперь история сообщений не удаляется!", time: "12:05" },
-      { user: "FlareChatNEW", text: "🔥 Обновление 1.1: Добавлен профиль с возможностью смены цвета аватарки.", time: "12:10" },
-      { user: "FlareChatNEW", text: "✏️ Обновление 1.2: Добавлена кнопка создания групп и каналов (скоро полноценный запуск).", time: "12:15" },
-      { user: "FlareChatNEW", text: "🎨 Обновление 1.3: Полностью переработан дизайн. Теперь он чистый и минималистичный, как в DeepSeek.", time: "12:20" }
+      { user: "FlareChatNEW", text: "Добро пожаловать!", time: "12:00" },
+      { user: "FlareChatNEW", text: "Мы убрали казино и добавили настройки.", time: "12:05" }
     ];
 
-    document.getElementById('lets-go-btn').addEventListener('click', () => {
-      splashScreen.style.opacity = '0';
-      setTimeout(() => { splashScreen.style.display = 'none'; loginScreen.style.display = 'flex'; }, 400);
-    });
+    document.getElementById('lets-go-btn').onclick = () => { splash.style.display = 'none'; loginScreen.style.display = 'flex'; };
 
     socket.on('connect', () => {
-      const savedUser = localStorage.getItem('flare-user');
-      const savedPass = localStorage.getItem('flare-pass');
-      if (savedUser && savedPass) socket.emit('login', { username: savedUser, password: savedPass });
+      const u = localStorage.getItem('flare-user'), p = localStorage.getItem('flare-pass');
+      if (u && p) socket.emit('login', { username: u, password: p });
     });
 
-    loginBtn.addEventListener('click', () => {
-      var u = usernameInput.value.trim().replace('@', '');
-      var p = passwordInput.value;
-      if (!u || !p) { errorDiv.innerText = "Введите имя и пароль"; return; }
-      localStorage.setItem('flare-user', u);
-      localStorage.setItem('flare-pass', p);
+    document.getElementById('login-btn').onclick = () => {
+      var u = document.getElementById('username-input').value.trim().replace('@', '');
+      var p = document.getElementById('password-input').value;
+      if (!u || !p) return;
+      localStorage.setItem('flare-user', u); localStorage.setItem('flare-pass', p);
       socket.emit('login', { username: u, password: p });
-    });
+    };
 
     socket.on('login success', (user) => {
       username = user;
-      loginScreen.style.display = 'none';
-      mainScreen.style.display = 'flex';
-      
-      document.getElementById('profile-username').innerText = '@' + username;
-      document.getElementById('profile-avatar').innerText = username.charAt(0).toUpperCase();
-      const savedColor = localStorage.getItem('flare-color') || '#ff5722';
-      document.getElementById('profile-avatar').style.background = savedColor;
-
+      loginScreen.style.display = 'none'; mainScreen.style.display = 'flex';
       renderChatList();
     });
 
-    socket.on('login error', (msg) => { 
-      errorDiv.innerText = msg; 
-      localStorage.removeItem('flare-user');
-      localStorage.removeItem('flare-pass');
-    });
+    socket.on('login error', (msg) => { document.getElementById('login-error').innerText = msg; });
 
     let allUsers = [];
-    socket.on('online users', (users) => {
-      allUsers = users;
-      renderChatList();
-    });
-
-    searchInput.addEventListener('input', renderChatList);
+    socket.on('online users', (users) => { allUsers = users; renderChatList(); });
 
     function renderChatList() {
-      const query = searchInput.value.toLowerCase().replace('@', '');
-      let listToRender = [
+      let list = [
         {name: 'global', displayName: 'Общий чат', isGlobal: true},
         {name: 'channel', displayName: 'FlareChatNEW', isChannel: true}
       ];
-
-      if (query.length > 0) {
-        let filtered = allUsers.filter(u => u.toLowerCase().includes(query) && u !== username);
-        filtered.forEach(u => listToRender.push({name: u, displayName: '@' + u}));
-      } else {
-        if (allUsers.includes('FLARE-desk')) listToRender.push({name: 'FLARE-desk', displayName: '@FLARE-desk'});
-      }
+      if (allUsers.includes('FLARE-desk')) list.push({name: 'FLARE-desk', displayName: '@FLARE-desk'});
       
       chatList.innerHTML = '';
-      listToRender.forEach(item => {
-        const li = document.createElement('li');
-        li.className = 'chat-item';
-        let avatarLetter = item.isGlobal ? '#' : (item.isChannel ? 'F' : item.displayName.replace('@','').charAt(0).toUpperCase());
-        let avatarClass = 'avatar' + (item.isChannel ? ' channel-avatar' : '');
-        
-        li.innerHTML = `
-          <div class="${avatarClass}">${avatarLetter}</div>
-          <div class="chat-info">
-            <div class="chat-name">${item.displayName}</div>
-          </div>
-        `;
-        li.addEventListener('click', () => openChat(item));
+      list.forEach(item => {
+        const li = document.createElement('li'); li.className = 'chat-item';
+        let letter = item.isGlobal ? '#' : (item.isChannel ? 'F' : item.displayName.replace('@','').charAt(0).toUpperCase());
+        li.innerHTML = `<div class="avatar ${item.isChannel ? 'channel-avatar' : ''}">${letter}</div><div class="chat-info"><div class="chat-name">${item.displayName}</div></div>`;
+        li.onclick = () => openChat(item);
         chatList.appendChild(li);
       });
     }
 
     function openChat(item) {
       currentChat = item.name;
-      chatTitle.innerText = item.displayName;
-      chatListArea.style.display = 'none';
-      navSidebar.style.display = 'none';
-      chatArea.style.display = 'flex';
+      document.getElementById('chat-title').innerText = item.displayName;
+      chatListArea.style.display = 'none'; chatArea.style.display = 'flex';
       messagesList.innerHTML = ''; 
       
       if (item.isChannel) {
-        form.style.display = 'none';
-        casinoBtn.style.display = 'none';
-        channelMessages.forEach(msg => addMessageToScreen(msg, false));
+        document.getElementById('form').style.display = 'none';
+        channelMessages.forEach(msg => addMessageToScreen(msg));
       } else {
-        form.style.display = 'flex';
-        if (item.name === 'FLARE-desk') {
-          casinoBtn.style.display = 'flex';
-        } else {
-          casinoBtn.style.display = 'none';
-        }
+        document.getElementById('form').style.display = 'flex';
         if (item.name === 'global') socket.emit('get history'); 
       }
     }
 
-    backBtn.addEventListener('click', () => {
-      chatArea.style.display = 'none';
-      chatListArea.style.display = 'flex';
-      navSidebar.style.display = 'flex';
-      currentChat = "";
-    });
+    document.getElementById('back-btn').onclick = () => { chatArea.style.display = 'none'; chatListArea.style.display = 'flex'; currentChat = ""; };
 
-    form.addEventListener('submit', (e) => {
+    document.getElementById('form').onsubmit = (e) => {
       e.preventDefault();
-      if (!messageInput.value || currentChat === 'channel') return; 
-      if (currentChat === 'global') {
-        socket.emit('chat message', { text: messageInput.value });
-      } else if (currentChat !== "") {
-        socket.emit('private message', { to: currentChat, text: messageInput.value });
-      }
-      messageInput.value = '';
-    });
-
-    casinoBtn.addEventListener('click', function() {
-      if (currentChat === 'FLARE-desk') socket.emit('private message', { to: 'FLARE-desk', text: '777' });
-    });
+      const text = document.getElementById('message-input').value;
+      if (!text || currentChat === 'channel') return; 
+      
+      if (currentChat === 'global') socket.emit('chat message', { chatId: 'global', text: text });
+      else socket.emit('private message', { to: currentChat, text: text });
+      document.getElementById('message-input').value = '';
+    };
 
     function addMessageToScreen(data) {
       const isMine = (data.user === username || data.from === username);
-      const item = document.createElement('li');
-      item.className = 'message' + (isMine ? ' my-msg' : '');
-      
-      const senderName = data.user || data.from;
-      
-      item.innerHTML = `
-        <div class="meta">
-          <span>${isMine ? 'Вы' : '@' + senderName}</span>
-          <span>${data.time}</span>
-        </div>
-        <div class="text">${data.text}</div>
-      `;
-      messagesList.appendChild(item);
-      messagesList.scrollTop = messagesList.scrollHeight;
+      const li = document.createElement('li'); li.className = 'message' + (isMine ? ' my-msg' : '');
+      li.innerHTML = `<div class="meta"><span>${isMine ? 'Вы' : '@' + (data.user || data.from)}</span><span>${data.time}</span></div>${data.text || ''}`;
+      messagesList.appendChild(li); messagesList.scrollTop = messagesList.scrollHeight;
     }
 
-    socket.on('chat history', (history) => { 
-      if(currentChat === 'global') {
-        messagesList.innerHTML = '';
-        history.forEach(msg => addMessageToScreen(msg)); 
-      }
-    });
-    
     socket.on('chat message', (data) => { if (currentChat === 'global') addMessageToScreen(data); });
     socket.on('private message', (data) => { if (currentChat === data.from || currentChat === data.to) addMessageToScreen(data); });
 
     // Навигация
-    document.getElementById('nav-home').addEventListener('click', () => {
-      chatListArea.style.display = 'flex'; chatArea.style.display = 'none'; navSidebar.style.display = 'flex';
-      profileScreen.style.display = 'none'; settingsScreen.style.display = 'none';
-    });
+    document.getElementById('nav-home').onclick = () => { chatListArea.style.display = 'flex'; chatArea.style.display = 'none'; settingsScreen.style.display = 'none'; searchScreen.style.display = 'none'; };
+    document.getElementById('nav-settings').onclick = () => { chatListArea.style.display = 'none'; chatArea.style.display = 'none'; settingsScreen.style.display = 'flex'; };
+    document.getElementById('close-settings').onclick = () => { settingsScreen.style.display = 'none'; chatListArea.style.display = 'flex'; };
     
-    document.getElementById('nav-profile').addEventListener('click', () => {
-      chatListArea.style.display = 'none'; chatArea.style.display = 'none'; profileScreen.style.display = 'flex';
-    });
+    document.getElementById('search-bar').onclick = () => { searchScreen.style.display = 'flex'; };
+    document.getElementById('close-search').onclick = () => { searchScreen.style.display = 'none'; };
 
-    document.getElementById('nav-settings').addEventListener('click', () => {
-      chatListArea.style.display = 'none'; chatArea.style.display = 'none'; settingsScreen.style.display = 'flex';
-    });
-
-    document.getElementById('close-profile').addEventListener('click', () => {
-      profileScreen.style.display = 'none'; chatListArea.style.display = 'flex';
-    });
-    document.getElementById('close-settings').addEventListener('click', () => {
-      settingsScreen.style.display = 'none'; chatListArea.style.display = 'flex';
-    });
-
-    document.querySelectorAll('.color-circle').forEach(circle => {
-      circle.addEventListener('click', () => {
-        const color = circle.getAttribute('data-color');
-        document.getElementById('profile-avatar').style.background = color;
-        localStorage.setItem('flare-color', color);
-        renderChatList(); 
-      });
-    });
-
-    document.getElementById('create-btn').addEventListener('click', () => {
-      alert("Здесь скоро появится создание групп и каналов! ✏️");
-    });
+    // Заглушка для кнопки создания группы
+    document.getElementById('create-btn').onclick = () => { alert("Создание групп скоро появится в новой версии!"); };
   </script>
 </body>
 </html>
